@@ -36,10 +36,10 @@ export class MyArc extends Graphics{
      let endAngle = this.myEndAngle;
      let anticlockwise = this.myAnticlockwise;
 
-     this.clear();
-     this.beginFill(color);
-     this.arc(x, y, radius, startAngle, endAngle, anticlockwise);
-     this.endFill();
+     this.clear()
+     .beginFill(color)
+     .arc(x, y, radius, startAngle, endAngle, anticlockwise)
+     .endFill();
     }
  }
 
