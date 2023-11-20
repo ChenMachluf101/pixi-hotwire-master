@@ -47,78 +47,46 @@ bigLeftCircCont.addChild(smallLeftCircCont);
 app.stage.addChild(rectanglesCont, bigLeftCircCont,bigRightCircCont);
 play();
 
-
-/*****functions*****/
 function play(){
-	initCircles();
-// @ts-ignore
-	setTimeout(() => {init()},1000);
-	setTimeout(() => {init2()},3000);
-	setTimeout(() => {init3()},3050);
-	setTimeout(() => {init4()},3150);
-	setTimeout(() => {init5()},7000);
-	setTimeout(() => {init6()},7050);
-	setTimeout(() => {init7()},7050);
-	setTimeout(() => {init8()},7150);
-	setTimeout(() => {init9()},10000);
+	playCircles();
+	rotateRectangle(1.05,1.57,2.1,3.14, black, white,3000);
+	rotateRectangle(4.19,4.71,5.24,6.2848, white, black,7000);
+	rotateRectangle(7.33,7.854,8.374,9.425, black, white,10000);
+	rotateRectangle(10.475,10.995,11.525,12.565, white, black,13000);
 }
 
-function initCircles (){
-	//let bigRightCircleTween =
+
+
+function playCircles(){
 	gsap.from (bigRightCircCont, { rotation: 0, y: - 300, duration: 1,repeat: -1, repeatDelay: 3, startAt: {x: screenW * 3 / 4,y: 300, opacity: 0} });
 	gsap.from (bigRightCircCont, { rotation: 0, y: - 300, duration: 1,repeat: -1, repeatDelay: 10, startAt: {x: screenW * 3 / 4,y: 300, opacity: 0} });
-
-	//let bigLeftCircleTween =
 	gsap.to (smallLeftCircCont, {  duration: 3,rotation: -6.28 , repeat: -1});
-
-	//let smallRightCircleTween =
 	gsap.to (smallRightCirCont, { duration: 2,rotation: -6.28, repeat: -1 });
 }
+function rotateRectangle(rotation1: number, rotation2: number, rotation3: number, rotation4: number, leftColor: number, rightColor: number, timeout: number){
+	setTimeout(() => {firstStep(rotation1)},timeout);//0.52
+	setTimeout(() => {secondStep(rotation2, leftColor, rightColor)},timeout + 50);//0.53
+	setTimeout(() => {thirdStep(rotation3, leftColor, rightColor)},timeout + 100);//1.04
+	setTimeout(() => {lastStep(rotation4)},timeout + 150);//1.05
+}
+function firstStep(rotation: number) {
+	gsap.to(rectanglesCont, {duration: 0.2,ease: "none",delay: 2000,  rotation:rotation});
+}
 
-function init(){
-	gsap.to(rectanglesCont, {duration: 0.2,ease: "none",delay: 2000,  rotation:1.05});
+function secondStep(rotation: number, colorLeft: number, colorRight: number) {
+	gsap.to(rectanglesCont, { duration: 0.15,ease: "none",  rotation:rotation});
+	setTimeout(() => {topRightArc.changeColor(colorLeft)}, 100);
+	setTimeout(() => {bottomLeftArc.changeColor(colorRight)}, 100);
 }
-// @ts-ignore
- function init2(){
-	 gsap.to(rectanglesCont, { duration: 0.15,ease: "none",  rotation:1.57});
-	 setTimeout(() => {topRightArc.changeColor(black)}, 100);
-	  setTimeout(() => {bottomLeftArc.changeColor(white)}, 100);
- }
-// @ts-ignore
-function init3(){
-	gsap.to(rectanglesCont, { duration: 0.15,ease: "none",  rotation:2.1});
-	  setTimeout(() => {topLeftArc.changeColor(white)}, 110);
-	  setTimeout(() => {bottomRightArc.changeColor(black)}, 110);
-	 setTimeout(() => {smallRightCircle.changeColor(white)}, 100);
-	 setTimeout(() => {smallLeftCircle.changeColor(black)}, 100);
+
+function thirdStep(rotation: number, colorLeft: number, colorRight: number) {
+	gsap.to(rectanglesCont, { duration: 0.15,ease: "none",  rotation:rotation});
+	setTimeout(() => {topLeftArc.changeColor(colorRight)}, 100);
+	setTimeout(() => {smallLeftCircle.changeColor(colorLeft)}, 100);
+	setTimeout(() => {bottomRightArc.changeColor(colorLeft)}, 100);
+	setTimeout(() => {smallRightCircle.changeColor(colorRight)}, 100);
 }
-// @ts-ignore
-function init4() {
-	gsap.to(rectanglesCont, {duration: 0.2, rotation: 3.14});
-}
-// @ts-ignore
-function init5() {
-	gsap.to(rectanglesCont, {duration: 0.2,ease: "none", rotation: 4.19});
-}
-// @ts-ignore
-function init6(){
-	gsap.to(rectanglesCont, { duration: 0.15,ease: "none",  rotation:4.71});
-	setTimeout(() => {topRightArc.changeColor(white)}, 100);
-	setTimeout(() => {bottomLeftArc.changeColor(black)}, 100);
-}
-// @ts-ignore
-function init7(){
-	gsap.to(rectanglesCont, { duration: 0.15,ease: "none",  rotation:5.24});
-	setTimeout(() => {topLeftArc.changeColor(black)}, 100);
-	setTimeout(() => {bottomRightArc.changeColor(white)}, 100);
-	setTimeout(() => {smallRightCircle.changeColor(black)}, 100);
-	setTimeout(() => {smallLeftCircle.changeColor(white)}, 100);
-}
-// @ts-ignore
-function init8() {
-	gsap.to(rectanglesCont, {duration: 0.15,ease: "power2.out", rotation: 6.2848})
-}
-// @ts-ignore
-function init9 (){
-	gsap.to(rectanglesCont, {duration: 0.2,ease: "none",delay: 2000,  rotation:7});
+
+function lastStep(rotation: number) {
+	gsap.to(rectanglesCont, {duration: 0.2,ease: "power2.out", rotation: rotation});
 }
