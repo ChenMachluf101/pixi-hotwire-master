@@ -64,10 +64,10 @@ function playCircles(){
 	gsap.to (smallRightCirCont, { duration: 2,rotation: -6.28, repeat: -1 });
 }
 function rotateRectangle(rotation1: number, rotation2: number, rotation3: number, rotation4: number, leftColor: number, rightColor: number, timeout: number){
-	setTimeout(() => {firstStep(rotation1)},timeout);//0.52
-	setTimeout(() => {secondStep(rotation2, leftColor, rightColor)},timeout + 50);//0.53
-	setTimeout(() => {thirdStep(rotation3, leftColor, rightColor)},timeout + 100);//1.04
-	setTimeout(() => {lastStep(rotation4)},timeout + 150);//1.05
+	setTimeout(() => {firstStep(rotation1)},timeout);
+	setTimeout(() => {secondStep(rotation2, leftColor, rightColor)},timeout + 50);
+	setTimeout(() => {thirdStep(rotation3, leftColor, rightColor)},timeout + 100);
+	setTimeout(() => {lastStep(rotation4)},timeout + 150);
 }
 function firstStep(rotation: number) {
 	gsap.to(rectanglesCont, {duration: 0.2,ease: "none",delay: 2000,  rotation:rotation});
