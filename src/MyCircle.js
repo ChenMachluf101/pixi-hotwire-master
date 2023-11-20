@@ -28,10 +28,10 @@ export class MyCircle extends Graphics{
         let y =  this.myY;
         let radius = this.myRadius;
 
-        this.clear();
-        this.beginFill(color);
-        this.drawCircle(x, y, radius);
-        this.endFill();
+        this.clear()
+        .beginFill(color)
+        .drawCircle(x, y, radius)
+        .endFill();
     }
 }
 
