@@ -53,7 +53,6 @@ const blackRectangleConfig = {
   color: black,
   container: rectanglesCont,
 };
-
 new MyRectangle(blackRectangleConfig);
 
 const topLeftArcConfig = {
@@ -65,7 +64,6 @@ const topLeftArcConfig = {
   color: black,
   container: bigLeftCircCont,
 };
-
 const topLeftArc = new MyArc(topLeftArcConfig);
 
 const bottomLeftArcConfig = {
@@ -91,7 +89,6 @@ const smallLeftCircleConfig = {
   pivotX: screenW / 4,
   pivotY: screenH / 2,
 };
-
 const smallLeftCircle = new MyCircle(smallLeftCircleConfig);
 
 const topRightArcConfig = {
@@ -105,7 +102,6 @@ const topRightArcConfig = {
   pivotX: (screenW * 3) / 4,
   pivotY: screenH / 2,
 };
-
 const topRightArc = new MyArc(topRightArcConfig);
 
 const bottomRightArcConfig = {
@@ -120,7 +116,6 @@ const bottomRightArcConfig = {
   pivotY: screenH / 2,
   anticlockwise: true,
 };
-
 const bottomRightArc = new MyArc(bottomRightArcConfig);
 
 const smallRightCircleConfig = {
@@ -132,26 +127,118 @@ const smallRightCircleConfig = {
   pivotX: (screenW * 3) / 4,
   pivotY: screenH / 2,
 };
-
 const smallRightCircle = new MyCircle(smallRightCircleConfig);
 
 bigRightCircCont.addChild(smallRightCirCont);
 bigLeftCircCont.addChild(smallLeftCircCont);
 app.stage.addChild(rectanglesCont, bigLeftCircCont, bigRightCircCont);
-play();
+play(-1);
 
-// @ts-ignore
-function play() {
+async function play(times: number) {
   playCircles();
-  rotateRectangle(1.05, 1.57, 2.1, 3.14, black, white);
-  // rectanglesCont.rotation = 0;
-  // rotateRectangle(1.05, 1.57, 2.1, 3.14, white, black);
-  // rotateRectangle(4.19, 4.71, 5.24, 6.2848, white, black);
-  // rotateRectangle(7.33, 7.854, 8.374, 9.425, black, white);
-  // rotateRectangle(10.475, 10.995, 11.525, 12.565, white, black);
+  let i = 0;
+  let whiteBlack = false;
+  while (times === -1 || times > i) {
+    if (whiteBlack) {
+      await rotateRectangle(
+        60 + 180 * i,
+        90 + 180 * i,
+        120 + 180 * i,
+        180 + 180 * i,
+        white,
+        black,
+      );
+    } else {
+      await rotateRectangle(
+        60 + 180 * i,
+        90 + 180 * i,
+        120 + 180 * i,
+        180 + 180 * i,
+        black,
+        white,
+      );
+    }
+    whiteBlack = !whiteBlack;
+    i++;
+  }
 }
 
-// @ts-ignore
+function rotateRectangle(
+  angle1: number,
+  angle2: number,
+  angle3: number,
+  angle4: number,
+  leftColor: number,
+  rightColor: number,
+) {
+  return firstStep(angle1)
+    .then(() => {
+      secondStep(angle2);
+    })
+    .then(() => {
+      secondStepColoring(leftColor, rightColor);
+    })
+    .then(() => {
+      thirdStep(angle3);
+    })
+    .then(() => {
+      thirdStepColoring(leftColor, rightColor);
+    })
+    .then(() => {
+      lastStep(angle4);
+    });
+}
+
+function firstStep(angle: number) {
+  return gsap.to(rectanglesCont, {
+    duration: 0.2,
+    ease: "none",
+    delay: 3,
+    angle: angle,
+  });
+}
+
+function secondStep(angle: number) {
+  return gsap.to(rectanglesCont, {
+    duration: 0.15,
+    ease: "none",
+    angle: angle,
+  });
+}
+
+function secondStepColoring(colorLeft: number, colorRight: number) {
+  return new Promise(() => {
+    topRightArc.changeColor(colorLeft);
+    bottomLeftArc.changeColor(colorRight);
+  });
+}
+
+function thirdStep(angle: number) {
+  return gsap.to(rectanglesCont, {
+    duration: 0.15,
+    ease: "none",
+    angle: angle,
+  });
+}
+
+function thirdStepColoring(colorLeft: number, colorRight: number) {
+  return new Promise(() => {
+    topLeftArc.changeColor(colorRight);
+    smallLeftCircle.changeColor(colorLeft);
+    bottomRightArc.changeColor(colorLeft);
+    smallRightCircle.changeColor(colorRight);
+  });
+}
+
+function lastStep(angle: number) {
+  gsap.to(rectanglesCont, {
+    duration: 0.2,
+    ease: "power2.out",
+    repeatRefresh: true,
+    angle: angle,
+  });
+}
+
 function playCircles() {
   gsap.from(bigRightCircCont, {
     rotation: 0,
@@ -171,79 +258,4 @@ function playCircles() {
   });
   gsap.to(smallLeftCircCont, { duration: 3, rotation: -6.28, repeat: -1 });
   gsap.to(smallRightCirCont, { duration: 2, rotation: -6.28, repeat: -1 });
-}
-
-function rotateRectangle(
-  rotation1: number,
-  rotation2: number,
-  rotation3: number,
-  rotation4: number,
-  leftColor: number,
-  rightColor: number,
-) {
-  firstStep(rotation1)
-    .then(() => {
-      console.log("after first step");
-      return secondStep(rotation2, leftColor, rightColor);
-    })
-    .then(() => {
-      return thirdStep(rotation3, leftColor, rightColor);
-    })
-    .then(() => {
-      return lastStep(rotation4);
-    })
-    .then(() => {
-      console.log("finished");
-    });
-}
-
-// @ts-ignore
-function firstStep(rotation: number) {
-  return gsap
-    .to(rectanglesCont, {
-      duration: 0.2,
-      ease: "none",
-      delay: 2000,
-      rotation: rotation,
-    })
-    .then(() => {});
-}
-// @ts-ignore
-function secondStep(rotation: number, colorLeft: number, colorRight: number) {
-  console.log("in second step");
-  return gsap
-    .to(rectanglesCont, { duration: 0.15, ease: "none", rotation: rotation })
-    .then(() => {
-      topRightArc.changeColor(colorLeft);
-      bottomLeftArc.changeColor(colorRight);
-    });
-}
-
-// @ts-ignore
-function thirdStep(rotation: number, colorLeft: number, colorRight: number) {
-  console.log("in third step");
-  return gsap
-    .to(rectanglesCont, {
-      duration: 0.15,
-      ease: "none",
-      rotation: rotation,
-    })
-    .then(() => {
-      topLeftArc.changeColor(colorRight);
-      smallLeftCircle.changeColor(colorLeft);
-      bottomRightArc.changeColor(colorLeft);
-      smallRightCircle.changeColor(colorRight);
-    });
-}
-
-// @ts-ignore
-function lastStep(rotation: number) {
-  console.log("in last step");
-  return gsap
-    .to(rectanglesCont, {
-      duration: 0.2,
-      ease: "power2.out",
-      rotation: rotation,
-    })
-    .then(() => {});
 }
