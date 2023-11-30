@@ -173,16 +173,10 @@ function rotateRectangle(
 ) {
   return firstStep(angle1)
     .then(() => {
-      secondStep(angle2);
+      secondStep(angle2, leftColor, rightColor);
     })
     .then(() => {
-      secondStepColoring(leftColor, rightColor);
-    })
-    .then(() => {
-      thirdStep(angle3);
-    })
-    .then(() => {
-      thirdStepColoring(leftColor, rightColor);
+      thirdStep(angle3, leftColor, rightColor);
     })
     .then(() => {
       lastStep(angle4);
@@ -198,7 +192,9 @@ function firstStep(angle: number) {
   });
 }
 
-function secondStep(angle: number) {
+function secondStep(angle: number, colorLeft: number, colorRight: number) {
+  topRightArc.changeColor(colorLeft);
+  bottomLeftArc.changeColor(colorRight);
   return gsap.to(rectanglesCont, {
     duration: 0.15,
     ease: "none",
@@ -206,32 +202,20 @@ function secondStep(angle: number) {
   });
 }
 
-function secondStepColoring(colorLeft: number, colorRight: number) {
-  return new Promise(() => {
-    topRightArc.changeColor(colorLeft);
-    bottomLeftArc.changeColor(colorRight);
-  });
-}
-
-function thirdStep(angle: number) {
+function thirdStep(angle: number, colorLeft: number, colorRight: number) {
+  topLeftArc.changeColor(colorRight);
+  smallLeftCircle.changeColor(colorLeft);
+  bottomRightArc.changeColor(colorLeft);
+  smallRightCircle.changeColor(colorRight);
   return gsap.to(rectanglesCont, {
     duration: 0.15,
     ease: "none",
     angle: angle,
-  });
-}
-
-function thirdStepColoring(colorLeft: number, colorRight: number) {
-  return new Promise(() => {
-    topLeftArc.changeColor(colorRight);
-    smallLeftCircle.changeColor(colorLeft);
-    bottomRightArc.changeColor(colorLeft);
-    smallRightCircle.changeColor(colorRight);
   });
 }
 
 function lastStep(angle: number) {
-  gsap.to(rectanglesCont, {
+  return gsap.to(rectanglesCont, {
     duration: 0.2,
     ease: "power2.out",
     repeatRefresh: true,
